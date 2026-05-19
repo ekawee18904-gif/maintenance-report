@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>รายงานประจำวัน — งานซ่อมบำรุง</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --blue:#1d4ed8;--blue-light:#dbeafe;--blue-mid:#93c5fd;
+    --orange:#ea580c;--orange-light:#fff7ed;
+    --green:#16a34a;--green-light:#f0fdf4;
+    --gray:#6b7280;--gray-light:#f9fafb;--gray-border:#e5e7eb;
+    --text:#111827;--text-muted:#6b7280;
+    --radius:8px;--radius-lg:12px;
+  }
+
+  body{font-family:'Sarabun',sans-serif;background:#f3f4f6;color:var(--text);font-size:14px;line-height:1.6}
+
+  .screen{max-width:780px;margin:0 auto;padding:20px 16px}
+
+  /* Top bar */
+  .top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+  .top-bar-title{display:flex;align-items:center;gap:10px}
+  .top-bar-title .icon{width:36px;height:36px;background:var(--blue);border-radius:var(--radius);display:flex;align-items:center;justify-content:center}
+  .top-bar-title .icon svg{width:20px;height:20px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .top-bar-title h1{font-size:17px;font-weight:600;color:var(--text)}
+  .top-bar-title p{font-size:12px;color:var(--text-muted)}
+  .btn-row{display:flex;gap:8px}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius);border:1px solid var(--gray-border);background:#fff;color:var(--text);font-size:13px;font-family:'Sarabun',sans-serif;cursor:pointer;font-weight:500;transition:background .15s}
+  .btn:hover{background:var(--gray-light)}
+  .btn-print{background:var(--blue);border-color:var(--blue);color:#fff}
+  .btn-print:hover{background:#1e40af}
+  .btn-danger{color:#dc2626;border-color:#fecaca}
+  .btn-danger:hover{background:#fef2f2}
+  .btn-add{background:var(--blue-light);border-color:var(--blue-mid);color:var(--blue)}
+  .btn-add:hover{background:#bfdbfe}
+
+  /* Card */
+  .card{background:#fff;border:1px solid var(--gray-border);border-radius:var(--radius-lg);padding:16px 20px;margin-bottom:14px}
+  .sec-label{font-size:12px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+  .sec-label svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+  /* Info grid */
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:480px){.info-grid{grid-template-columns:1fr}}
+
+  /* Field */
+  .field label{font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:4px;display:block}
+  .field input,.field textarea,.field select{width:100%;padding:8px 10px;border:1px solid var(--gray-border);border-radius:var(--radius);font-family:'Sarabun',sans-serif;font-size:13px;color:var(--text);background:#fff;transition:border .15s;resize:none}
+  .field input:focus,.field textarea:focus{outline:none;border-color:var(--blue)}
+  .field{margin-bottom:0}
+
+  /* Work card */
+  .work-card{background:#fff;border:1px solid var(--gray-border);border-radius:var(--radius-lg);padding:16px;margin-bottom:12px}
+  .work-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--gray-border)}
+  .work-badge{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--orange);background:var(--orange-light);padding:4px 10px;border-radius:20px}
+  .work-badge svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .work-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+  @media(max-width:480px){.work-grid{grid-template-columns:1fr}}
+
+  /* Status */
+  .status-wrap{display:flex;gap:16px;flex-wrap:wrap;margin-top:4px}
+  .status-wrap label{display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;color:var(--text-muted)}
+  .status-wrap input[type=radio]{accent-color:var(--blue)}
+
+  /* Photo zone */
+  .photo-zone{border:1.5px dashed var(--gray-border);border-radius:var(--radius);padding:12px;text-align:center;cursor:pointer;position:relative;background:var(--gray-light);transition:border-color .15s,background .15s;margin-top:10px}
+  .photo-zone:hover{border-color:var(--blue);background:var(--blue-light)}
+  .photo-zone svg{width:24px;height:24px;stroke:var(--gray);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;margin-bottom:4px}
+  .photo-zone p{font-size:12px;color:var(--text-muted)}
+  .photo-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+  .thumb-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .thumb{position:relative;width:72px;height:72px}
+  .thumb img{width:72px;height:72px;object-fit:cover;border-radius:var(--radius);border:1px solid var(--gray-border)}
+  .thumb .del{position:absolute;top:-5px;right:-5px;width:18px;height:18px;background:#ef4444;border-radius:50%;border:2px solid #fff;color:#fff;font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;font-weight:700}
+
+  /* Add work */
+  .add-work-row{text-align:center;margin:4px 0 16px}
+
+  /* Learning */
+  .learning-card{background:var(--green-light);border:1px solid #bbf7d0;border-radius:var(--radius-lg);padding:16px 20px;margin-bottom:14px}
+  .learning-card .sec-label{color:var(--green)}
+
+  /* Sign row */
+  .sign-row{display:flex;justify-content:flex-end;gap:40px;margin-top:12px}
+  .sign-box{text-align:center}
+  .sign-line{width:160px;height:28px;border-bottom:1px solid var(--gray-border)}
+  .sign-label{font-size:11px;color:var(--text-muted);margin-top:4px}
+
+  /* ── PRINT ── */
+  @media print{
+    body{background:#fff;font-size:9pt}
+    .screen{max-width:100%;padding:0}
+    .no-print{display:none!important}
+    .card,.work-card,.learning-card{border:1px solid #e5e7eb;border-radius:6px;margin-bottom:8px;padding:10px 14px;break-inside:avoid}
+    .work-header{margin-bottom:8px;padding-bottom:6px}
+    .field input,.field textarea,.field select{border:none;background:transparent;padding:0;font-size:9pt}
+    .field textarea{min-height:0;height:auto}
+    .photo-zone{border:1px dashed #d1d5db;background:#f9fafb}
+    .thumb img{width:50px;height:50px}
+    .thumb .del{display:none}
+    .info-grid{grid-template-columns:1fr 1fr}
+    .work-grid{grid-template-columns:1fr 1fr}
+    h1{font-size:13pt}
+    .sign-line{width:130px}
+  }
+</style>
+</head>
+<body>
+<div class="screen">
+
+  <!-- Top bar -->
+  <div class="top-bar no-print">
+    <div class="top-bar-title">
+      <div class="icon">
+        <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      </div>
+      <div>
+        <h1>รายงานประจำวัน</h1>
+        <p>งานซ่อมบำรุง — Daily Maintenance Report</p>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="clearAll()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+        เริ่มใหม่
+      </button>
+      <button class="btn btn-print" onclick="window.print()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        พิมพ์ / บันทึก PDF
+      </button>
+    </div>
+  </div>
+
+  <!-- Header print title -->
+  <div style="border-bottom:2px solid var(--blue);padding-bottom:8px;margin-bottom:14px">
+    <p style="font-size:20px;font-weight:700;color:var(--blue)">รายงานประจำวัน — งานซ่อมบำรุง</p>
+    <p style="font-size:12px;color:var(--text-muted)">Daily Maintenance Report</p>
+  </div>
+
+  <!-- Info card -->
+  <div class="card">
+    <div class="sec-label">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      ข้อมูลผู้รายงาน
+    </div>
+    <div class="info-grid">
+      <div class="field"><label>ชื่อผู้รายงาน</label><input type="text" placeholder="ระบุชื่อ-นามสกุล"></div>
+      <div class="field"><label>วันที่</label><input type="date" id="rdate"></div>
+    </div>
+  </div>
+
+  <!-- Works -->
+  <div class="sec-label" style="margin-bottom:10px;color:var(--orange)">
+    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+    รายการงาน
+  </div>
+  <div id="works-container"></div>
+  <div class="add-work-row no-print">
+    <button class="btn btn-add" onclick="addWork()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      เพิ่มงาน
+    </button>
+  </div>
+
+  <!-- Learning -->
+  <div class="learning-card">
+    <div class="sec-label">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      การเรียนรู้วันนี้
+    </div>
+    <div class="field">
+      <label>สิ่งที่ได้เรียนรู้ / เทคนิคใหม่ที่พบ</label>
+      <textarea rows="3" placeholder="บันทึกสิ่งที่เรียนรู้จากการทำงานวันนี้..."></textarea>
+    </div>
+  </div>
+
+  <!-- Sign -->
+  <div class="sign-row">
+    <div class="sign-box">
+      <div class="sign-line"></div>
+      <div class="sign-label">ลงชื่อผู้รายงาน</div>
+    </div>
+    <div class="sign-box">
+      <div class="sign-line"></div>
+      <div class="sign-label">ลงชื่อผู้ตรวจสอบ</div>
+    </div>
+  </div>
+
+</div><!-- /screen -->
+
+<script>
+let workCount = 0;
+
+function addWork() {
+  workCount++;
+  const n = workCount;
+  const id = 'work-' + n;
+  const div = document.createElement('div');
+  div.className = 'work-card';
+  div.id = id;
+  div.innerHTML = `
+    <div class="work-header">
+      <span class="work-badge">
+        <svg viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        งานที่ ${n}
+      </span>
+      <button class="btn btn-danger no-print" style="padding:5px 10px;font-size:12px" onclick="removeWork('${id}')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+        ลบ
+      </button>
+    </div>
+    <div class="work-grid">
+      <div class="field"><label>ชื่องาน / อุปกรณ์</label><input type="text" placeholder="ระบุชื่องานหรืออุปกรณ์"></div>
+      <div class="field"><label>สถานที่ / จุด</label><input type="text" placeholder="ระบุสถานที่หรือจุดที่ทำงาน"></div>
+    </div>
+    <div class="field" style="margin-bottom:10px"><label>รายละเอียดงาน</label><textarea rows="2" placeholder="อธิบายงานที่ดำเนินการ..."></textarea></div>
+    <div class="work-grid">
+      <div class="field"><label>ปัญหาที่พบ</label><textarea rows="2" placeholder="ระบุปัญหา (ถ้าไม่มีให้ระบุ - )"></textarea></div>
+      <div class="field"><label>การแก้ไข</label><textarea rows="2" placeholder="วิธีแก้ไขที่ดำเนินการ..."></textarea></div>
+    </div>
+    <div class="field" style="margin-top:6px"><label>สถานะ</label>
+      <div class="status-wrap">
+        <label><input type="radio" name="st-${n}" value="done"> ✅ เสร็จสมบูรณ์</label>
+        <label><input type="radio" name="st-${n}" value="pending"> 🔄 รอดำเนินการต่อ</label>
+        <label><input type="radio" name="st-${n}" value="pass"> 📋 ส่งต่อทีม</label>
+      </div>
+    </div>
+    <div style="margin-top:10px">
+      <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px">รูปภาพประกอบ</div>
+      <div class="photo-zone no-print" id="zone-${id}">
+        <svg viewBox="0 0 24 24" style="margin:0 auto 4px"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <p>คลิกเพื่อเพิ่มรูปภาพ (เลือกได้หลายรูป)</p>
+        <input type="file" accept="image/*" multiple onchange="handleFiles(event,'${id}')">
+      </div>
+      <div class="thumb-row" id="thumbs-${id}"></div>
+    </div>
+  `;
+  document.getElementById('works-container').appendChild(div);
+}
+
+function removeWork(id) {
+  const el = document.getElementById(id);
+  if (el && confirm('ลบงานนี้?')) el.remove();
+}
+
+function handleFiles(e, id) {
+  Array.from(e.target.files).forEach(f => {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const src = ev.target.result;
+      const thumbRow = document.getElementById('thumbs-' + id);
+      const idx = Date.now() + Math.random();
+      const wrap = document.createElement('div');
+      wrap.className = 'thumb';
+      wrap.id = 'th-' + idx;
+      wrap.innerHTML = `<img src="${src}" alt="รูปงาน"><button class="del no-print" onclick="document.getElementById('th-${idx}').remove()" title="ลบรูป">&times;</button>`;
+      thumbRow.appendChild(wrap);
+    };
+    reader.readAsDataURL(f);
+  });
+  e.target.value = '';
+}
+
+function clearAll() {
+  if (!confirm('ล้างข้อมูลทั้งหมดและเริ่มใหม่?')) return;
+  document.getElementById('works-container').innerHTML = '';
+  document.querySelectorAll('input[type=text], input[type=date], textarea').forEach(el => el.value = '');
+  document.querySelectorAll('input[type=radio]').forEach(el => el.checked = false);
+  workCount = 0;
+  addWork();
+}
+
+// Init
+document.getElementById('rdate').value = new Date().toISOString().split('T')[0];
+addWork();
+</script>
+</body>
+</html>
