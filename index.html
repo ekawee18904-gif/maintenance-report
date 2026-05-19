@@ -172,9 +172,18 @@
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       การเรียนรู้วันนี้
     </div>
-    <div class="field">
+    <div class="field" style="margin-bottom:10px">
       <label>สิ่งที่ได้เรียนรู้ / เทคนิคใหม่ที่พบ</label>
       <textarea rows="3" placeholder="บันทึกสิ่งที่เรียนรู้จากการทำงานวันนี้..."></textarea>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:600;color:var(--green);margin-bottom:6px">รูปภาพประกอบการเรียนรู้</div>
+      <div class="photo-zone no-print" id="zone-learning" style="border-color:#bbf7d0">
+        <svg viewBox="0 0 24 24" style="margin:0 auto 4px;stroke:#16a34a"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <p>คลิกเพื่อเพิ่มรูปภาพ (เลือกได้หลายรูป)</p>
+        <input type="file" accept="image/*" multiple onchange="handleFiles(event,'learning')">
+      </div>
+      <div class="thumb-row" id="thumbs-learning"></div>
     </div>
   </div>
 
